@@ -1,29 +1,24 @@
-from random import random, randint
-import math
-from time import sleep
+from random import random
+from math import exp
 
-def error(output, expected):
-    if len(output) != len(expected):
-        raise "length of the arrays output and expected are not the same"
-    result = 0
-    for x in range(len(output)):
-        result += (expected[x]-output[x])**2
-    return 1/2 * result
-
-
+#this function is used to create arrays with random floats 
+#x = the length of the array
 def random_array(x):
     result = []
     for a in range(x):
         result.append(random()-0.5)
     return result
-
+#the sigmoid function is the actiavtion function of the neuron
 def sigmoid(x):
-    return 1 / (1+ math.exp(-x))
-
+    return 1 / (1+ exp(-x))
+# sigmoid_I is the derivation of sigmoid its nessecary for the backpropagation
 def sigmoid_I(x):
     return sigmoid(x)*(1.0-sigmoid(x))
 
 
+#------------------------------------------------------------------------------------------
+#this class defines a neuron whichs most important task is, to hold an array with weights
+#one weight for each neuron in the Layer before
 class Neuron:
     def __init__(self, J_Length_int):
         self.weights = random_array(J_Length_int)
@@ -36,7 +31,9 @@ class Neuron:
         return sigmoid(result)
 
 
-
+#------------------------------------------------------------------------------------------
+#this class defines a Layer. Its an array of neurons
+#with the Layer function you dont need the neuron function in daylie use
 class Layer:
     def __init__(self, L_Length_int, J_Length_int):
         self.Neurons = []
@@ -56,7 +53,14 @@ class Layer:
 
 
 
+#------------------------------------------------------------------------------------------
+#the CNN decribes an array of Layers
+#you can use this class to 
+#-create a CNN
+#-train it
+#read its output
 
+#if i got the time there will be new functions coming
 class CNN:
     def __init__(self, L_Length_array, Input_Length_int, training_rate=0.05):
         self.Layers = []
@@ -83,16 +87,21 @@ class CNN:
         reversed_layer = self.Layers[::-1]
         error_signal_new = []
         for L in range(len(reversed_layer)):
-            #für jede Layer 1 mal
+            #one time for every Layer in the Network
             error_signal_old = error_signal_new
             error_signal_new = []
             for N in range(len(reversed_layer[L].Neurons)):
-                #für jedes Neuron einmal (mit n vielen gewichten)
+                #one Time for every Neuron in the Layer
                 for W in range(len(reversed_layer[L].Neurons[N].weights)):
-                    #Für jedes Gewicht im Neuron 1 mal (also für jedes Neuron in der schicht davor einmal)
+                    #one Time for every Weight in the Neuron
                     
+                    #backpropagation stuff
+                    #better read abaout it at this place:
+                    #https://de.wikipedia.org/wiki/Backpropagation#Fehlerminimierung
+                    #its where I got the equations from
+#---------------------------------------------------------------------------------
                     error_1 = sigmoid_I(reversed_layer[L].output[N])
-                    #teil 1 ist bei beiden Formeln (hidden ud output neuron) gleich
+                    
 
                     #teil 2 ist anders
                     if L == 0:
@@ -110,20 +119,4 @@ class CNN:
                     error_signal_new.append(error)
                     delta_w = self.training_rate*error*reversed_layer[L].output[N]
                     reversed_layer[L].Neurons[N].weights[W] += delta_w
-
-
-NN = CNN([5,10, 10, 10, 5], 5)
-input_data=[0.878, 0.4657, 0.098, 0.876, 0.123]
-expected_array = [0.1, 0.1, 0.9, 0.9, 0.5]
-output = NN.feed_forwoard(input_data)
-print(output)
-print(expected_array)
-
-for x in range(10000):
-    NN.train(input_data, expected_array)
-    output_array = NN.feed_forwoard(input_data)
-
-print(output_array)
-print(expected_array)
-print("\n---------------------------------------\n")
-
+#-------------------------------------------------------------------------------------------------------
