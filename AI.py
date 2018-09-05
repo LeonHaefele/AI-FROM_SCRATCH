@@ -129,7 +129,8 @@ class NN:
                         error_2 = 0
                         if len(reversed_layer) == L+1:
                             continue
-                            #error_2 += (reversed_layer[L].Neurons[N].weights[0])
+                            #here we should take care about the input neurons and how they weight there inputs
+                            #should they weight there inputs?
                         else:
                             for k in range(len(reversed_layer[L+1].Neurons)):
                                 error_2 += (reversed_layer[L].Neurons[N].weights[k]*error_signal_old[k])
