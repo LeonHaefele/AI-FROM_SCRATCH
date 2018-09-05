@@ -1,16 +1,20 @@
 from random import random
 from math import exp
 
-#this function is used to create arrays with random floats 
+#this function is used to create arrays with random floats between -0.5 and 0.5
 #x = the length of the array
 def random_array(x):
     result = []
     for a in range(x):
         result.append(random()-0.5)
     return result
+
+
 #the sigmoid function is the actiavtion function of the neuron
 def sigmoid(x):
     return 1 / (1+ exp(-x))
+
+
 # sigmoid_I is the derivation of sigmoid its nessecary for the backpropagation
 def sigmoid_I(x):
     return sigmoid(x)*(1.0-sigmoid(x))
@@ -23,7 +27,8 @@ class Neuron:
     def __init__(self, J_Length_int):
         self.weights = random_array(J_Length_int)
 
-
+#the method output float calculates the sum of all activations multiplied with there weights
+#it returns a float
     def output_float(self, input_array):
         result = 0
         for n in range(len(self.weights)):
@@ -42,7 +47,9 @@ class Layer:
         for a in range(L_Length_int):
             n = Neuron(J_Length_int)
             self.Neurons.append(n)
-
+#the method calculate output calculates the output of this whole layer. 
+#it takes the output of the Layer before (or the user given Input incase of an input Layer)
+#and returns an array with one item for each Neuron output this array can be given into the next Layer as Input
     def calculate_output(self, input_array):
         self.output = []
         for a in range(len(self.Neurons)):
@@ -60,7 +67,7 @@ class Layer:
 #-train it
 #read its output
 
-#if i got the time there will be new functions coming
+#In Fututure more Functionality will be coming
 class CNN:
     def __init__(self, L_Length_array, Input_Length_int, training_rate=0.05):
         self.Layers = []
@@ -72,7 +79,8 @@ class CNN:
             else:
                 x = Layer(L_Length_array[n], 1)
             self.Layers.append(x)
-    
+    #this function feeds the Input data into the CNN and returns its output
+    #this function doesnt manipulate the Network
     def feed_forwoard(self, input_array):
         if len(input_array)!= self.Input_Length_int:
             raise "Inputdata doesnt match the given Length"
@@ -80,7 +88,8 @@ class CNN:
             for Layer in self.Layers:
                 input_array = Layer.calculate_output(input_array)
             return input_array
-
+    #this function includes the whole Traing for one Training step
+    #you should use this in a "for" or "while" structure
     def train(self, input_array, expected_array):
         self.feed_forwoard(input_array)
 
@@ -94,16 +103,20 @@ class CNN:
                 #one Time for every Neuron in the Layer
                 for W in range(len(reversed_layer[L].Neurons[N].weights)):
                     #one Time for every Weight in the Neuron
-                    
-                    #backpropagation stuff
+                   
+                
+                
+                
+                    #|---------------------|
+                    #|backpropagation stuff|
+                    #|---------------------|
                     #better read abaout it at this place:
                     #https://de.wikipedia.org/wiki/Backpropagation#Fehlerminimierung
                     #its where I got the equations from
 #---------------------------------------------------------------------------------
                     error_1 = sigmoid_I(reversed_layer[L].output[N])
-                    
+     
 
-                    #teil 2 ist anders
                     if L == 0:
                         error_2 = reversed_layer[L].output[N]-expected_array[N]
                     else:
