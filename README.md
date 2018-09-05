@@ -1,4 +1,4 @@
-# CNN-FROM-SCRATCH
+# Artifical Intelligence
 very little cnn library in python
 
 The Project is totaly not finished yet but
