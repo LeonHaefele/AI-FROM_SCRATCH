@@ -1,5 +1,5 @@
 # Artifical Intelligence
-very little cnn library in python
+very little AI library in python
 
 The Project is totaly not finished yet but
 more Functionality will come in the future
